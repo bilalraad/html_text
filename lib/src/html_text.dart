@@ -4,30 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'helper.dart';
 import 'html_text_model.dart';
 
-class HtmlText extends StatefulWidget {
-  final String text;
+class HtmlText extends StatelessWidget {
+  final String value;
 
-  HtmlText(this.text, {Key key})
-      : assert(text != null),
+  HtmlText(this.value, {Key key})
+      : assert(value != null),
         super(key: key);
-
-  @override
-  _HtmlTextState createState() => _HtmlTextState();
-}
-
-class _HtmlTextState extends State<HtmlText> {
-  HtmlTextModel first;
-  List<HtmlTextModel> texts;
-
-  @override
-  void initState() {
-    texts = HtmlTextHelper.mountText(widget.text);
-
-    first = texts.first;
-    texts = texts.where((e) => e.text != first.text).toList();
-
-    super.initState();
-  }
 
   FontWeight get _normal => FontWeight.w400;
 
@@ -44,6 +26,11 @@ class _HtmlTextState extends State<HtmlText> {
 
   @override
   Widget build(BuildContext context) {
+    var texts = HtmlTextHelper.mountText(value);
+
+    var first = texts.first;
+    texts = texts.where((e) => e.text != first.text).toList();
+
     return RichText(
       text: TextSpan(
         text: first.text,

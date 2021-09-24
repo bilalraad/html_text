@@ -1,6 +1,6 @@
 name: html_text
 description: convert html text to text by putting italics, bold and underline
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/matheusperez/html_text
 
 environment:
