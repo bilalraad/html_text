@@ -7,7 +7,7 @@ import 'html_text_model.dart';
 class HtmlText extends StatefulWidget {
   final String text;
 
-  HtmlText(this.text, {Key? key})
+  HtmlText(this.text, {Key key})
       : assert(text != null),
         super(key: key);
 
@@ -16,8 +16,8 @@ class HtmlText extends StatefulWidget {
 }
 
 class _HtmlTextState extends State<HtmlText> {
-  late HtmlTextModel first;
-  late List<HtmlTextModel> texts;
+  HtmlTextModel first;
+  List<HtmlTextModel> texts;
 
   @override
   void initState() {

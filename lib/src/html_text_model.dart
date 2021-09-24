@@ -2,7 +2,7 @@ class HtmlTextModel {
   final String text;
   final HtmlTextFormat format;
 
-  HtmlTextModel({required this.text, required this.format});
+  HtmlTextModel({this.text, this.format});
 
   Map<String, dynamic> toJson() => {
         'text': text,
