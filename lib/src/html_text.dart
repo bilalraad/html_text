@@ -7,13 +7,12 @@ import 'html_text_model.dart';
 class HtmlText extends StatelessWidget {
   final String value;
 
-  HtmlText(this.value, {Key key})
-      : assert(value != null),
-        super(key: key);
+  HtmlText(this.value, {Key? key}) : super(key: key);
 
   FontWeight get _normal => FontWeight.w400;
 
-  TextStyle get _style => GoogleFonts.montserrat(fontSize: 20, fontWeight: _normal, color: Colors.black);
+  TextStyle get _style => GoogleFonts.montserrat(
+      fontSize: 20, fontWeight: _normal, color: Colors.black);
 
   FontWeight _getFontWeight(HtmlTextFormat value) {
     switch (value) {
@@ -36,8 +35,12 @@ class HtmlText extends StatelessWidget {
         text: first.text,
         style: _style.copyWith(
           fontWeight: _getFontWeight(first.format),
-          decoration: first.format == HtmlTextFormat.underline ? TextDecoration.underline : TextDecoration.none,
-          fontStyle: first.format == HtmlTextFormat.italic ? FontStyle.italic : FontStyle.normal,
+          decoration: first.format == HtmlTextFormat.underline
+              ? TextDecoration.underline
+              : TextDecoration.none,
+          fontStyle: first.format == HtmlTextFormat.italic
+              ? FontStyle.italic
+              : FontStyle.normal,
         ),
         children: texts
             .map(
@@ -45,8 +48,12 @@ class HtmlText extends StatelessWidget {
                 text: e.text,
                 style: _style.copyWith(
                   fontWeight: _getFontWeight(e.format),
-                  decoration: e.format == HtmlTextFormat.underline ? TextDecoration.underline : TextDecoration.none,
-                  fontStyle: e.format == HtmlTextFormat.italic ? FontStyle.italic : FontStyle.normal,
+                  decoration: e.format == HtmlTextFormat.underline
+                      ? TextDecoration.underline
+                      : TextDecoration.none,
+                  fontStyle: e.format == HtmlTextFormat.italic
+                      ? FontStyle.italic
+                      : FontStyle.normal,
                 ),
               ),
             )

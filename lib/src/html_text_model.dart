@@ -2,12 +2,9 @@ class HtmlTextModel {
   final String text;
   final HtmlTextFormat format;
 
-  HtmlTextModel({this.text, this.format});
+  HtmlTextModel({required this.text, required this.format});
 
-  Map<String, dynamic> toJson() => {
-        'text': text,
-        'format': format
-      };
+  Map<String, dynamic> toJson() => {'text': text, 'format': format};
 
   @override
   String toString() => toJson().toString();
