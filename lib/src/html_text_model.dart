@@ -10,4 +10,4 @@ class HtmlTextModel {
   String toString() => toJson().toString();
 }
 
-enum HtmlTextFormat { normal, bold, italic, underline }
+enum HtmlTextFormat { normal, bold, italic, underline, image }
