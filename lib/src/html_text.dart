@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -42,22 +43,31 @@ class HtmlText extends StatelessWidget {
               ? FontStyle.italic
               : FontStyle.normal,
         ),
-        children: texts
-            .map(
-              (e) => TextSpan(
-                text: e.text,
-                style: _style.copyWith(
-                  fontWeight: _getFontWeight(e.format),
-                  decoration: e.format == HtmlTextFormat.underline
-                      ? TextDecoration.underline
-                      : TextDecoration.none,
-                  fontStyle: e.format == HtmlTextFormat.italic
-                      ? FontStyle.italic
-                      : FontStyle.normal,
-                ),
+        children: texts.map((e) {
+          if (e.format != HtmlTextFormat.image) {
+            return TextSpan(
+              text: e.text,
+              style: _style.copyWith(
+                fontWeight: _getFontWeight(e.format),
+                decoration: e.format == HtmlTextFormat.underline
+                    ? TextDecoration.underline
+                    : TextDecoration.none,
+                fontStyle: e.format == HtmlTextFormat.italic
+                    ? FontStyle.italic
+                    : FontStyle.normal,
               ),
-            )
-            .toList(),
+            );
+          } else {
+            return WidgetSpan(
+              child: CachedNetworkImage(
+                imageUrl: e.text,
+                placeholder: (context, url) => Container(
+                    padding: const EdgeInsets.all(6.0),
+                    child: CircularProgressIndicator()),
+              ),
+            );
+          }
+        }).toList(),
       ),
     );
   }

@@ -1,28 +1,35 @@
+import 'package:html_text/src/image_helper.dart';
+
 import 'html_text_model.dart';
 
 class HtmlTextHelper {
   // i - italic
   // b - bold
   // u - underline
+  // p - image
 
-  static String _convertHTML(String value) {
-    var text = value
+  static String highlightTextFormat(String value) {
+    final text = value
         .replaceAll('<i>', '%i')
         .replaceAll('</i>', '%i%')
         .replaceAll('<b>', '%b')
         .replaceAll('</b>', '%b%')
         .replaceAll('<u>', '%u')
-        .replaceAll('</u>', '%u%')
-        .replaceAll('src', '%p')
-        .replaceAll('<img', '')
-        .replaceAll(RegExp(r'<[^>]*>|&nbsp;|width="[0-9]*"'), '')
-        .replaceAll(RegExp('class="[A-z| |-]*">'), '%p%');
+        .replaceAll('</u>', '%u%');
     return text;
+  }
+
+  static String normalizeText(String value) {
+    return value.replaceAll(RegExp(r'<[^>]*>|&nbsp;'), '');
   }
 
   // NOTE separates the texts.
   static List<HtmlTextModel> mountText(String value) {
-    var texto = _convertHTML(value);
+    var texto = highlightTextFormat(value);
+    if (ImageHelper.containsImageTags(value)) {
+      texto = ImageHelper.highlightImage(value);
+    }
+    texto = normalizeText(texto);
     List<HtmlTextModel> list = <HtmlTextModel>[];
 
     while (texto.isNotEmpty) {
@@ -64,12 +71,13 @@ class HtmlTextHelper {
       texto = _replaceStepOne(texto);
       // detecta o final
       var fragmentTwo = _getFragment(texto);
-      if (format == HtmlTextFormat.image) {
-        var fragmentTwoImage = fragmentTwo.replaceAll(RegExp('="|"'), '');
-        list.add(HtmlTextModel(text: fragmentTwoImage, format: format));
-      } else {
-        list.add(HtmlTextModel(text: fragmentTwo, format: format));
-      } // NOTE remove the part that has already been saved
+      // if (format == HtmlTextFormat.image) {
+      //   var fragmentTwoImage = fragmentTwo.replaceAll(RegExp('"'), '');
+      //   list.add(HtmlTextModel(text: fragmentTwoImage, format: format));
+      // } else {
+      //   list.add(HtmlTextModel(text: fragmentTwo, format: format));
+      // } // NOTE remove the part that has already been saved
+      list.add(HtmlTextModel(text: fragmentTwo, format: format));
       texto = _removeFragment(texto, fragmentTwo);
 
       // NOTE remove the second tag
