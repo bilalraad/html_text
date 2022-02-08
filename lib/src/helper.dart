@@ -83,7 +83,7 @@ class HtmlTextHelper {
   }
 
   static String _getFragment(String value) =>
-      value.substring(0, value.indexOf('%'));
+      value.substring(0, value.indexOf(RegExp(r'%i|%b|%u|%p')));
 
   static String _removeFragment(String value, String fragment) =>
       value.replaceFirst(fragment, '');
