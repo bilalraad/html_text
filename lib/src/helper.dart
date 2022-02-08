@@ -33,7 +33,7 @@ class HtmlTextHelper {
     List<HtmlTextModel> list = <HtmlTextModel>[];
 
     while (texto.isNotEmpty) {
-      var i = texto.indexOf('%');
+      var i = texto.indexOf(RegExp('%p|%i|%b|%u'));
       // NOTE check if it only has text in normal format
       if (i == -1) {
         list.add(HtmlTextModel(text: texto, format: HtmlTextFormat.normal));
@@ -71,12 +71,7 @@ class HtmlTextHelper {
       texto = _replaceStepOne(texto);
       // detecta o final
       var fragmentTwo = _getFragment(texto);
-      // if (format == HtmlTextFormat.image) {
-      //   var fragmentTwoImage = fragmentTwo.replaceAll(RegExp('"'), '');
-      //   list.add(HtmlTextModel(text: fragmentTwoImage, format: format));
-      // } else {
-      //   list.add(HtmlTextModel(text: fragmentTwo, format: format));
-      // } // NOTE remove the part that has already been saved
+
       list.add(HtmlTextModel(text: fragmentTwo, format: format));
       texto = _removeFragment(texto, fragmentTwo);
 
