@@ -1,22 +1,39 @@
+import 'package:html_text/src/image_helper.dart';
+
 import 'html_text_model.dart';
 
 class HtmlTextHelper {
   // i - italic
   // b - bold
   // u - underline
+  // p - image
 
-  static String _convertHTML(String value) {
-    var text = value.replaceAll('<i>', '%i').replaceAll('</i>', '%i%').replaceAll('<b>', '%b').replaceAll('</b>', '%b%').replaceAll('<u>', '%u').replaceAll('</u>', '%u%').replaceAll(RegExp(r'<[^>]*>|&nbsp;'), '');
+  static String highlightTextFormat(String value) {
+    final text = value
+        .replaceAll('<i>', '%i')
+        .replaceAll('</i>', '%i%')
+        .replaceAll('<b>', '%b')
+        .replaceAll('</b>', '%b%')
+        .replaceAll('<u>', '%u')
+        .replaceAll('</u>', '%u%');
     return text;
+  }
+
+  static String normalizeText(String value) {
+    return value.replaceAll(RegExp(r'<[^>]*>|&nbsp;'), '');
   }
 
   // NOTE separates the texts.
   static List<HtmlTextModel> mountText(String value) {
-    var texto = _convertHTML(value);
+    var texto = highlightTextFormat(value);
+    if (ImageHelper.containsImageTags(value)) {
+      texto = ImageHelper.highlightImage(value);
+    }
+    texto = normalizeText(texto);
     List<HtmlTextModel> list = <HtmlTextModel>[];
 
-    while (texto != null || texto.isNotEmpty) {
-      var i = texto.indexOf('%');
+    while (texto.isNotEmpty) {
+      var i = texto.indexOf(RegExp('%p|%i|%b|%u'));
       // NOTE check if it only has text in normal format
       if (i == -1) {
         list.add(HtmlTextModel(text: texto, format: HtmlTextFormat.normal));
@@ -42,6 +59,9 @@ class HtmlTextHelper {
         case '%u':
           format = HtmlTextFormat.underline;
           break;
+        case '%p':
+          format = HtmlTextFormat.image;
+          break;
         default:
           format = HtmlTextFormat.normal;
           break;
@@ -51,19 +71,24 @@ class HtmlTextHelper {
       texto = _replaceStepOne(texto);
       // detecta o final
       var fragmentTwo = _getFragment(texto);
+
       list.add(HtmlTextModel(text: fragmentTwo, format: format));
-      // NOTE remove the part that has already been saved
       texto = _removeFragment(texto, fragmentTwo);
 
       // NOTE remove the second tag
       texto = _replaceStepTwo(texto);
     }
+
     return list;
   }
 
-  static String _getFragment(String value) => value.substring(0, value.indexOf('%'));
+  static String _getFragment(String value) =>
+      value.substring(0, value.indexOf(RegExp(r'%i|%b|%u|%p')));
 
-  static String _removeFragment(String value, String fragment) => value.replaceFirst(fragment, '');
-  static String _replaceStepOne(String value) => value.replaceFirst(RegExp(r'%i|%b|%u'), '');
-  static String _replaceStepTwo(String value) => value.replaceFirst(RegExp(r'%i%|%b%|%u%'), '');
+  static String _removeFragment(String value, String fragment) =>
+      value.replaceFirst(fragment, '');
+  static String _replaceStepOne(String value) =>
+      value.replaceFirst(RegExp(r'%i|%b|%u|%p'), '');
+  static String _replaceStepTwo(String value) =>
+      value.replaceFirst(RegExp(r'%i%|%b%|%u%|%p%'), '');
 }
