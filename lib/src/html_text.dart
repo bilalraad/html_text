@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:html/parser.dart' show parse;
 
 import 'helper.dart';
 import 'html_text_model.dart';
@@ -11,6 +12,8 @@ class HtmlText extends StatelessWidget {
   HtmlText(this.value, {Key? key}) : super(key: key);
 
   FontWeight get _normal => FontWeight.w400;
+  String get outerHTML => parse(value).outerHtml;
+  String? get body => parse(value).body?.outerHtml.toString();
 
   TextStyle get _style => GoogleFonts.montserrat(
       fontSize: 20, fontWeight: _normal, color: Colors.black);
