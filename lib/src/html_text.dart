@@ -9,8 +9,9 @@ import 'html_text_model.dart';
 
 class HtmlText extends StatelessWidget {
   final String value;
+  final int? maxLines;
 
-  HtmlText(this.value, {Key? key}) : super(key: key);
+  HtmlText(this.value, {Key? key, this.maxLines}) : super(key: key);
 
   FontWeight get _normal => FontWeight.w400;
   Document? get parsedHTML => parse(value);
@@ -35,6 +36,7 @@ class HtmlText extends StatelessWidget {
     texts = texts.where((e) => e.text != first.text).toList();
 
     return RichText(
+      maxLines: maxLines,
       text: TextSpan(
         text: first.text,
         style: _style.copyWith(
